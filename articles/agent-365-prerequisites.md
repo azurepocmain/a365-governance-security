@@ -1,148 +1,35 @@
-# Purview DataMap Asset Search API
+# Agent 365: Start Here
 <link rel="icon" href="articles//a365.svg" type="image/x-icon" >
 
-Organizations utilizing Microsoft Purview for data governance and asset management often require mechanisms to monitor and audit artifacts generated within Microsoft Fabric or other data services scanned by Purview. 
-This document provides a comprehensive guide on leveraging Microsoft Fabric Notebooks to query assets within Purview DataMaps and automate the delivery of the results via email to designated stakeholders.
+## Overview
 
-***Steps***
+As organizations adopt agents across different platforms, keeping track of their identities, access, and activity gets more complicated. That's where Microsoft Agent 365 comes in.
 
-***Step1:***
-Establish a service principal and configure Purview API permissions, specifically granting access to the Purview Application API. (Further testing is required for complete validation we will update.)
-
-
-***Step2:***
-Create an Azure Key Vault to store the service principal metadata. 
-
-***Step3:***
-Create a secret for your service principal and store the tenant_id, client_id, and client_secret in your key vault. 
-Keep track of the names of the metadata and the key vault name. 
+Agent 365 provides a centralized control plane for managing, securing, and governing agents through the Microsoft 365 admin center. It brings together administration, identity, security, and compliance capabilities for agents built on Microsoft platforms and supported third party platforms.
+<img width="1680" height="818" alt="image" src="https://github.com/user-attachments/assets/26cb031f-27e2-4c17-bf5c-0d4835ae93ee" />
+<img width="2148" height="735" alt="image" src="https://github.com/user-attachments/assets/8c8efd4a-6eed-46a5-a1a2-b14e31d02dda" />
 
 
-***Step4:***
-Initialize a Microsoft Fabric Notebook and insert the following code into a designated cell for each script block. 
-Ensure that you input the corresponding KeyVault name and reference the precise secret names where the service principal metadata is stored.
+We'll start with agent identity blueprints and individual agent identities. These provide the identity foundation, while authentication and authorization determine how an agent signs in and what it can access. For custom built agents, we'll look at how to integrate the supported authentication and telemetry components into the agent's code.
 
+Next, we'll use OpenTelemetry (OTel) to capture activity from agent runs and tool calls. We'll cover the Agent 365 telemetry export path and how to send telemetry to Application Insights alongside Purview collection poliies, where supported. Identity and telemetry work together here, but they serve different purposes: identity controls access, while telemetry helps us understand what happened.
 
-```
-import requests
-import time
-import pandas as pd
-from azure.identity import ClientSecretCredential
-from notebookutils.credentials import getSecret
+We'll also cover MCP servers in your Azure environment and how to use the Agent 365 CLI for supported MCP registration workflows.
 
-# URL of your Key Vault
-key_vault_url = 'https://you_keyvault_url_here.vault.azure.net/'
+From there, we'll explore how Microsoft Purview can collect agent requests and responses where supported, and how to configure Microsoft Defender to monitor activity, detect threats, and block supported malicious actions.
 
+We'll take a closer look at Microsoft Entra, including how agent identity provisioning and registration vary by platform. We'll also explore Microsoft Entra Global Secure Access and the visibility and access controls it can provide for supported agent traffic.
 
-# Retrieve the secrets
-tenant_id = getSecret(key_vault_url, "tenant-id")
-client_id = getSecret(key_vault_url, "pruview-service-princiapl-id")
-client_secret = getSecret(key_vault_url, "pruview-service-principal-key")
-PURVIEW_ACCOUNT_NAME=getSecret(key_vault_url, "purview-account-name")
+The goal is to bring those signals together so we can follow an agent's activity, investigate its interactions, and spot issues, including for custom built agents hosted outside Microsoft. The level of detail depends on the instrumentation, integrations, and services we've enabled.
 
-# --- Auth Setup ---
-credential = ClientSecretCredential(
-    tenant_id=tenant_id,
-    client_id=client_id,
-    client_secret=client_secret
-)
+## Prerequisites
 
-token = credential.get_token("https://purview.azure.net/.default").token
+Before we get started, confirm that your environment has the licensing for the capabilities you plan to use. Microsoft Agent 365 is included with Microsoft 365 E7 and is also available as a standalone subscription for eligible Microsoft 365 plans.
 
-headers = {
-    "Authorization": f"Bearer {token}",
-    "Content-Type": "application/json"
-}
+We'll also use Microsoft Purview, Microsoft Defender, and Microsoft Entra throughout this setup. Check the licensing, feature availability, and configuration requirements for the specific capabilities you want to enable in those services.
 
-search_url = f"https://{PURVIEW_ACCOUNT_NAME}.purview.azure.com/datamap/api/search/query?api-version=2023-09-01"
+For the current licensing and feature details, see the [Microsoft Agent 365 service description](https://learn.microsoft.com/en-us/office365/servicedescriptions/microsoft-agent-365/microsoft-agent-365).
 
-
-# --- Pagination Loop --- Or you wiil miss records using the continuation token key to verify additional data before stopping 
-all_assets = []
-continuation_token = None
-limit = 30  # Max is 30 from my testing
-
-while True:
-    query = {
-        "keywords": "",
-        "limit": limit
-    }
-
-    if continuation_token:
-        query["continuationToken"] = continuation_token
-
-    response = requests.post(search_url, headers=headers, json=query)
-    if response.status_code != 200:
-        print("Error:", response.status_code, response.text)
-        break
-
-    results = response.json()
-    batch = results.get("value", [])
-    all_assets.extend(batch)
-
-    continuation_token = results.get("continuationToken")
-    if not continuation_token:
-        break  # No more pages
-
-# ---Convert to DataFrame ---
-df_purview_assets = pd.DataFrame(all_assets)
-print(f"Retrieved {len(df_purview_assets)} assets")
-df_purview_assets
-
-```
-
-```
-# We will convert the Unix Timesamp into a normal timestamp, this assumes the job will be invoked every 24 hours first run can omit all of the below
-df_purview_assets["createTime_dt"] = pd.to_datetime(df_purview_assets["createTime"], unit='ms')
-```
-
-```
-# We will convert the dataframe to an HTML to show up nicely in the email
-md_string = df_purview_assets.to_html(index=False, escape=False)
-```
-
-```
-# # Exit notebook value output for email input
-mssparkutils.notebook.exit(md_string)
-```
-
-***Step5:***
-Create a pipeline and drag the two activities below: 
-
-![image](https://github.com/user-attachments/assets/4979ebc3-b155-4116-a634-ebd1c48f433e)
-
-
-
-***Step6:***
-In the notebook, select the "Settings" and the notebook that was created in Step3. 
-
-![image](https://github.com/user-attachments/assets/50a096da-3194-4911-81d6-5e0b7bf5fcc8)
-
-
-
-***Step7:***
-In the Email activity, login, and select the recipients and subject. 
-![image](https://github.com/user-attachments/assets/6f66d44b-a231-45f2-9236-08490d96b95f)
-
-***Step8:***
-For the body, go to the bottom of the page and select "View in expression builder" and add the below expression and ensure no other characters are added: 
-
-![image](https://github.com/user-attachments/assets/c469bea9-0cc3-4e16-a9cf-000c4f2d02bd)
-
-```
-@activity('NotebookPurviewAPI').output.result.exitValue
-```
-
-![image](https://github.com/user-attachments/assets/5064921b-0969-4169-b673-6f76f427110f)
-
-![image](https://github.com/user-attachments/assets/5ea8c26b-919b-45ae-9b54-9c1d5916e198)
-
-
-***Step9:***
-Run the pipeline to confirm the behavior, then setup a run schedule.
-The output should look like the below: 
-
-![image](https://github.com/user-attachments/assets/771efe7d-0ded-4fc4-a200-3776628d40d7)
 
 
 
