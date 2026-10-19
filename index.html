@@ -1,0 +1,288 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+
+	
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>A365 Governance, Security &amp; Observability</title>
+	
+
+
+    <style>
+	
+		
+	
+
+
+
+        body {
+            background-color: #FFF;
+            text-align: center;
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0px;
+        }
+
+        .container {
+            width: 80%;
+            margin: auto;
+        }
+
+        .logomain {
+        background-color:#333333;
+        color: #fff;
+        font-size: 40px;
+        font-weight: bold;
+        position:relative;
+        padding: 30px 0;
+        }
+        .logomain{
+        margin-left: 0px;
+        margin-top:0px; 
+        margin-bottom:0px; 
+        text-align:center;
+        }
+
+        .header-container {
+        max-width: 550px; /* Set a specific width */
+        margin: 0px auto; /* Center the container */
+        text-align: center;
+        padding-top: 10px;
+        padding-bottom: 20px;
+        position: relative;
+        }
+
+        .header-container::before {
+            content: ""; 
+            display: block;
+            width: 100%;
+            height: 10px; /* Thickness of the blue line */
+            background-color: #0078D4; /* Blue color */
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .header-container img {
+            display: block;
+            margin: auto;
+            width: 120px; /* Adjust image width */
+            height: auto;
+        }
+
+        .header-container h1 {
+            margin-top: 0px; /* Space below image */
+            font-size: 40px;
+            font-weight: bold;
+            color: #000; /* Ensure black text */
+            background-color: #fff; /* Match background */
+            padding: 0px 0;
+        }
+
+
+        .section {
+            margin-top: 40px;
+        }
+
+        h2 {
+            border-bottom: 3px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .box-container {
+            display: flex;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 10px;
+            padding-bottom: 20px;
+            scroll-behavior: smooth;
+            list-style: none;
+            padding-left: 5px;
+            padding-top: 5px;
+            scroll-snap-type: x mandatory;
+            scroll-padding-left: 5px;
+        }
+
+        .box {
+            min-width: 250px;
+            box-sizing: border-box;
+            min-height: 230px;
+            border: 2px solid #888;
+            background: linear-gradient(to bottom, #ffffff, #e1e1e1);
+            box-shadow: 0 0 5px #888;
+            text-align: center;
+            padding: 10px;
+            flex: 0 0 280px;
+            scroll-snap-align: start;
+            overflow-wrap: anywhere;
+        }
+
+        .box:hover {
+            background-color: #f8f8f8;
+        }
+
+        .box a { color: inherit; text-decoration: none; display: block; height: 100%; }
+        .box h3 { font-size: 18px; margin: 12px 0; }
+        .box p { font-size: 15px; line-height: 1.5; }
+        .step-number { color: #005a9e; font-weight: bold; }
+        .step-status { color: #555; }
+        button:focus-visible, a:focus-visible { outline: 3px solid #005a9e; outline-offset: 3px; }
+        .nav-buttons button:disabled { background-color: #666; cursor: default; }
+
+        @media (max-width: 600px) {
+            .container { width: 92%; }
+            .header-container { width: 92%; }
+            .header-container h1 { font-size: 30px; overflow-wrap: anywhere; }
+            .box { min-width: 0; flex-basis: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .box-container { scroll-behavior: auto; }
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+
+        .nav-buttons button {
+            padding: 8px 15px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #0078D4;
+            color: white;
+            border-radius: 5px;
+        }
+
+        .nav-buttons button:hover {
+            background-color: #005a9e;
+        }
+
+        .footer {
+            margin-top: 50px;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
+
+
+
+</head>
+
+<body>
+
+
+    <div class="logomain">
+    A365</div>
+	
+
+
+    <div class="header-container">
+        <h1>A365 Governance, Security &amp; Observability</h1>
+    </div>
+
+    <div class="container">
+	
+        <div class="section">
+            <h2>Agent 365 Step-by-Step</h2>
+            <ol class="box-container" id="step-boxes" aria-label="Agent 365 learning steps" tabindex="0"></ol>
+            <div class="nav-buttons">
+                <button type="button" id="previous-step" aria-label="Previous step" aria-controls="step-boxes" title="Previous step">&#8592;</button>
+                <button type="button" id="next-step" aria-label="Next step" aria-controls="step-boxes" title="Next step">&#8594;</button>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        Created by Data & AI CSA: Victor Adeyanju
+    </div>
+
+    <script>
+        const steps = [
+            { title: "Agent 365 Prerequisites", description: "Tenant readiness, licensing, permissions, and governance scope.", href: null },
+            { title: "Set Up Agent Blueprints", description: "Blueprint ownership, provisioning, and agent lifecycle.", href: null },
+            { title: "Give External Agents Microsoft Identities", description: "Identity onboarding for agents hosted outside Microsoft.", href: null },
+            { title: "Access Microsoft MCP Servers", description: "Supported authentication, permissions, and consent for agent tools.", href: null },
+            { title: "Create and Secure MCP Servers", description: "Custom tools, server authorization, and secure hosting.", href: null },
+            { title: "Send Agent OpenTelemetry Data", description: "Agent 365 instrumentation, export configuration, and supported destinations.", href: null },
+            { title: "Purview APIs vs. Agent 365 Telemetry", description: "Compare integration purposes, permissions, and supported ingestion paths.", href: null },
+            { title: "Create Purview Collection Policies", description: "Collection scope, sensitive data handling, and validation.", href: null },
+            { title: "Monitor AI Activities and Entra", description: "Review collected AI activity alongside supported identity and audit signals.", href: null },
+            { title: "Set Up Defender for Cloud", description: "Workload coverage, protection plans, and cloud security posture.", href: null },
+            { title: "Monitor Agents with Defender", description: "Supported detections, alert investigation, and incident response.", href: null }
+        ];
+
+        const container = document.getElementById("step-boxes");
+        const previousButton = document.getElementById("previous-step");
+        const nextButton = document.getElementById("next-step");
+
+        steps.forEach((step, index) => {
+            const box = document.createElement("li");
+            box.className = "box";
+            const content = document.createElement(step.href ? "a" : "div");
+            if (step.href) {
+                content.href = step.href;
+            }
+            const number = document.createElement("p");
+            number.className = "step-number";
+            number.textContent = `Step ${index + 1}`;
+            const title = document.createElement("h3");
+            title.textContent = step.title;
+            const description = document.createElement("p");
+            description.textContent = step.description;
+            const status = document.createElement("p");
+            status.className = "step-status";
+            status.textContent = step.href ? "Read guide" : "Coming soon";
+            content.append(number, title, description, status);
+            box.appendChild(content);
+            container.appendChild(box);
+        });
+
+        function updateNavigation() {
+            previousButton.disabled = container.scrollLeft <= 1;
+            nextButton.disabled = container.scrollLeft + container.clientWidth >= container.scrollWidth - 1;
+        }
+
+        function scrollSteps(direction) {
+            const distance = container.firstElementChild.getBoundingClientRect().width + parseFloat(getComputedStyle(container).gap);
+            container.scrollBy({ left: direction * distance });
+        }
+
+        previousButton.addEventListener("click", () => scrollSteps(-1));
+        nextButton.addEventListener("click", () => scrollSteps(1));
+        container.addEventListener("scroll", updateNavigation);
+        window.addEventListener("resize", updateNavigation);
+        updateNavigation();
+
+    </script>
+
+  <footer style="margin-top: 3rem; padding: 1rem; text-align: center; font-size: 0.9rem; color: #555;">
+        &copy; 2026 A365 Governance, Security &amp; Observability
+  </footer>
+
+
+
+
+
+	    
+</body>
+</html>
