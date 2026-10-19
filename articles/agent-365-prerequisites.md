@@ -6,8 +6,8 @@
 As organizations adopt agents across different platforms, keeping track of their identities, access, and activity gets more complicated. That's where Microsoft Agent 365 comes in.
 
 Agent 365 provides a centralized control plane for managing, securing, and governing agents through the Microsoft 365 admin center. It brings together administration, identity, security, and compliance capabilities for agents built on Microsoft platforms and supported third party platforms.
-<img width=1000  alt="image" src="https://github.com/user-attachments/assets/26cb031f-27e2-4c17-bf5c-0d4835ae93ee" />
-<img width="2148" height="735" alt="image" src="https://github.com/user-attachments/assets/8c8efd4a-6eed-46a5-a1a2-b14e31d02dda" />
+<img width="1000"  alt="image" src="https://github.com/user-attachments/assets/26cb031f-27e2-4c17-bf5c-0d4835ae93ee" />
+<img width="1000"  alt="image" src="https://github.com/user-attachments/assets/8c8efd4a-6eed-46a5-a1a2-b14e31d02dda" />
 
 
 We'll start with agent identity blueprints and individual agent identities. These provide the identity foundation, while authentication and authorization determine how an agent signs in and what it can access. For custom built agents, we'll look at how to integrate the supported authentication and telemetry components into the agent's code.
