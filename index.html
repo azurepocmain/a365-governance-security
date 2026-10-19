@@ -99,10 +99,11 @@
             padding-bottom: 20px;
             scroll-behavior: smooth;
             list-style: none;
-            padding-left: 5px;
-            padding-top: 5px;
+            padding-left: 8px;
+            padding-right: 8px;
+            padding-top: 12px;
             scroll-snap-type: x mandatory;
-            scroll-padding-left: 5px;
+            scroll-padding-left: 8px;
         }
 
         .box {
@@ -117,10 +118,16 @@
             flex: 0 0 280px;
             scroll-snap-align: start;
             overflow-wrap: anywhere;
+            position: relative;
+            transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
         }
 
-        .box:hover {
-            background-color: #f8f8f8;
+        .box:hover, .box:focus-within {
+            background: linear-gradient(to bottom, #eef8ff, #cce8fa);
+            border-color: #0078D4;
+            box-shadow: 0 4px 8px #0078d440;
+            transform: translateY(-2px) scale(1.02);
+            z-index: 1;
         }
 
         .box a { color: inherit; text-decoration: none; display: block; height: 100%; }
@@ -140,6 +147,8 @@
 
         @media (prefers-reduced-motion: reduce) {
             .box-container { scroll-behavior: auto; }
+            .box { transition: none; }
+            .box:hover, .box:focus-within { transform: none; }
         }
 
         .nav-buttons {
@@ -239,10 +248,8 @@
         steps.forEach((step, index) => {
             const box = document.createElement("li");
             box.className = "box";
-            const content = document.createElement(step.href ? "a" : "div");
-            if (step.href) {
-                content.href = step.href;
-            }
+            const content = document.createElement("a");
+            content.href = step.href || "articles/coming-soon.html";
             const number = document.createElement("p");
             number.className = "step-number";
             number.textContent = `Step ${index + 1}`;
