@@ -1,5 +1,5 @@
 # Purview DataMap Asset Search API
-<link rel="icon" href="articles/fabric_16_color.svg" type="image/x-icon" >
+<link rel="icon" href="articles//a365.svg" type="image/x-icon" >
 
 Organizations utilizing Microsoft Purview for data governance and asset management often require mechanisms to monitor and audit artifacts generated within Microsoft Fabric or other data services scanned by Purview. 
 This document provides a comprehensive guide on leveraging Microsoft Fabric Notebooks to query assets within Purview DataMaps and automate the delivery of the results via email to designated stakeholders.
